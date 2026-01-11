@@ -1,11 +1,9 @@
-package org.ks.photoapp.domain.client;
-
+package org.ks.photoapp.web.client;
 
 
 import org.ks.photoapp.domain.client.dto.ClientDto;
 import org.ks.photoapp.domain.photosession.PhotoSessionService;
 import org.ks.photoapp.domain.photosession.dto.PhotoSessionDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,14 +15,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 import java.util.Optional;
 
-// Controller moved to org.ks.photoapp.web.client.ClientController
-// @Controller
+@Controller
 public class ClientController{
-    ClientService clientService;
+    org.ks.photoapp.domain.client.ClientService clientService;
     PhotoSessionService photoSessionService;
     public static final String NOTIFICATION_ATTRIBUTE = "notification";
 
-    public ClientController(ClientService clientService, PhotoSessionService photoSessionService) {
+    public ClientController(org.ks.photoapp.domain.client.ClientService clientService, PhotoSessionService photoSessionService) {
         this.clientService = clientService;
         this.photoSessionService = photoSessionService;
     }
@@ -54,14 +51,6 @@ public class ClientController{
         return "client";
     }
 
-   // @GetMapping("/client/{lastName}")
-  //  public String getClientByLastName(@PathVariable String lastName, Model model){
-  //     ClientDto client = clientService.findClientByLastName(lastName)
-   //             .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
-   //     model.addAttribute("client", client);
-  //      return "current-client";
- //   }
-
     @GetMapping("/client/new")
     public String newClientForm(Model model){
         ClientDto client = new ClientDto();
@@ -72,26 +61,26 @@ public class ClientController{
     @PostMapping("/client/new")
     public String newClient(ClientDto client, RedirectAttributes redirectAttributes){
         clientService.createNewClient(client);
-        redirectAttributes.addFlashAttribute(NOTIFICATION_ATTRIBUTE,
-                "Dodano nowego klienta");
+        addNotification(redirectAttributes, "Dodano nowego klienta");
         return "redirect:/client/all";
     }
-
 
 
     @GetMapping("/client/delete")
     public String deleteClient(@RequestParam long id, RedirectAttributes redirectAttributes){
         clientService.deleteClient(id);
-        redirectAttributes.addFlashAttribute(NOTIFICATION_ATTRIBUTE,
-                "Usunięto klienta");
+        addNotification(redirectAttributes, "Usunięto klienta");
         return "redirect:/all-clients";
     }
 
     @PostMapping("/client/update")
     public String updateClient(@RequestParam long id, ClientDto client, RedirectAttributes redirectAttributes){
         clientService.updateClientDetails(client, id);
-        redirectAttributes.addFlashAttribute(NOTIFICATION_ATTRIBUTE,
-                "Dane klienta zaktualinowane");
+        addNotification(redirectAttributes, "Dane klienta zaktualinowane");
         return "redirect:/client/{id}";
+    }
+
+    private void addNotification(RedirectAttributes redirectAttributes, String message) {
+        redirectAttributes.addFlashAttribute(NOTIFICATION_ATTRIBUTE, message);
     }
 }

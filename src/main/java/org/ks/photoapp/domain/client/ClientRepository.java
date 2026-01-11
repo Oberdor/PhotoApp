@@ -1,6 +1,6 @@
 package org.ks.photoapp.domain.client;
 
-import org.ks.photoapp.domain.photoSession.PhotoSession;
+import org.ks.photoapp.domain.photosession.PhotoSession;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

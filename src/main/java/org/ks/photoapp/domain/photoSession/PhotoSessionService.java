@@ -1,13 +1,16 @@
-package org.ks.photoapp.domain.photoSession;
+package org.ks.photoapp.domain.photosession;
 
 
 import org.ks.photoapp.domain.client.Client;
-import org.ks.photoapp.domain.client.ClientDtoMapper;
+import org.ks.photoapp.domain.client.mapper.ClientDtoMapper;
 import org.ks.photoapp.domain.client.ClientRepository;
 import org.ks.photoapp.domain.client.ClientService;
 import org.ks.photoapp.domain.payment.Payment;
 import org.ks.photoapp.domain.payment.PaymentRepository;
-import org.ks.photoapp.domain.photoSession.dto.PhotoSessionDto;
+import org.ks.photoapp.domain.photosession.dto.PhotoSessionDto;
+import org.ks.photoapp.domain.photosession.mapper.PhotoSessionDtoMapper;
+import org.ks.photoapp.domain.photosession.exception.PhotoSessionNotFoundException;
+import org.ks.photoapp.domain.client.exception.ClientNotFoundException;
 import org.ks.photoapp.domain.photos.Photos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +32,7 @@ public class PhotoSessionService {
         this.clientRepository = clientRepository;
     }
 
-    public List <PhotoSessionDto> getAll() {
+    public List <PhotoSessionDto> getAllSessions() {
         List<PhotoSession> photoSessions = (List<PhotoSession>) photoSessionRepository.findAll();
         return photoSessions.stream()
                 .filter(photoSession -> !photoSession.isContractFinished)
@@ -40,7 +43,7 @@ public class PhotoSessionService {
 
     public PhotoSession findById(Long id) {
         Optional<PhotoSession> optionalPhotoSession = photoSessionRepository.findById(id);
-        return optionalPhotoSession.orElseThrow(() -> new NullPointerException("PhotoSession not found with ID: " + id));
+        return optionalPhotoSession.orElseThrow(() -> new PhotoSessionNotFoundException(id));
     }
 
     public Optional<PhotoSessionDto> getPhotoSessionByClientId(Long clientId) {
@@ -54,7 +57,13 @@ public class PhotoSessionService {
         Payment payment = new Payment();
         Photos photos = new Photos();
         PhotoSession photoSession = new PhotoSession();
-        Client client = clientRepository.findById(photoSessionToSave.getClient().getId()).orElse(new Client());
+        Client client;
+        if (photoSessionToSave.getClient() != null && photoSessionToSave.getClient().getId() != null) {
+            client = clientRepository.findById(photoSessionToSave.getClient().getId())
+                    .orElseThrow(() -> new ClientNotFoundException(photoSessionToSave.getClient().getId()));
+        } else {
+            client = new Client();
+        }
         photoSession.setClient(client);
         photoSession.setPayment(payment);
         photoSession.setPhotos(photos);
@@ -65,41 +74,19 @@ public class PhotoSessionService {
     }
 
     public void deleteSession(long id) {
+        if (!photoSessionRepository.existsById(id)) {
+            throw new PhotoSessionNotFoundException(id);
+        }
         photoSessionRepository.deleteById(id);
     }
 
 
     public void updateSession(PhotoSessionDto photoSessionDto, long id) {
-        PhotoSession photoSessionToUpdate = photoSessionRepository.findPhotoSessionById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Photo session not found"));
+        PhotoSession photoSessionToUpdate = loadSessionOrThrow(id);
 
-        if (photoSessionDto.getClient() == null || photoSessionDto.getClient().getId() == null) {
-            throw new IllegalArgumentException("Client ID cannot be null");
-        }
+        Client client = loadClientOrThrow(photoSessionDto);
 
-        Client client = clientRepository.findById(photoSessionDto.getClient().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Client not found"));
-
-        photoSessionToUpdate.setClient(client);
-        photoSessionToUpdate.setSessionDate(photoSessionDto.getSessionDate());
-
-        Payment payment = photoSessionToUpdate.getPayment();
-        if (payment == null) {
-            throw new IllegalStateException("Payment information is missing");
-        }
-
-        payment.setIsDepositPaid(photoSessionDto.getIsDepositPaid());
-        payment.setIsBasePaid(photoSessionDto.getIsBasePaid());
-        payment.setIsAdditionalPaid(photoSessionDto.getIsAdditionalPaid());
-
-        Photos photos = photoSessionToUpdate.getPhotos();
-        if (photos == null) {
-            throw new IllegalStateException("Photos information is missing");
-        }
-
-        photos.setSentToClientForChoose(photoSessionDto.getIsPhotosSentToClientForChoose());
-        photos.setChosenByClient(photoSessionDto.getIsPhotosChosenByClient());
-        photos.setAdditionalChosenByClient(photoSessionDto.getIsAdditionalPhotosChosenByClient());
+        photoSessionToUpdate.applyUpdateFrom(photoSessionDto, client);
 
         photoSessionRepository.save(photoSessionToUpdate);
     }
@@ -138,11 +125,26 @@ public class PhotoSessionService {
                 .map(PhotoSessionDtoMapper::map);
     }
 
-    public List<PhotoSessionDto> findAllUnfinishedPhotoSession(){
+    public List<PhotoSessionDto> getAllUnfinishedSessions(){
         return photoSessionRepository.findAllByIsContractFinishedIsFalse().stream()
                 .map(PhotoSessionDtoMapper::map)
                 .toList();
     }
+
+    private PhotoSession loadSessionOrThrow(long id) {
+        return photoSessionRepository.findPhotoSessionById(id)
+                .orElseThrow(() -> new PhotoSessionNotFoundException(id));
+    }
+
+    private Client loadClientOrThrow(PhotoSessionDto dto) {
+        if (dto.getClient() == null || dto.getClient().getId() == null) {
+            throw new ClientNotFoundException("Client ID cannot be null");
+        }
+        return clientRepository.findById(dto.getClient().getId())
+                .orElseThrow(() -> new ClientNotFoundException(dto.getClient().getId()));
+    }
+
+    
 
 
 }
