@@ -9,10 +9,10 @@ import org.ks.photoapp.domain.photoSession.PhotoSession;
 public class Photos {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    Boolean SentToClientForChoose;
-    Boolean ChosenByClient;
-    Boolean AdditionalChosenByClient;
+    private Long id;
+    private Boolean sentToClientForChoose;
+    private Boolean chosenByClient;
+    private Boolean additionalChosenByClient;
     @OneToOne(mappedBy = "photos")
-    PhotoSession photoSession;
+    private PhotoSession photoSession;
 }

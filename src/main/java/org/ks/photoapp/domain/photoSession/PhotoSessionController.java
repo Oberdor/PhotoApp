@@ -83,16 +83,22 @@ public class PhotoSessionController {
 
 
 
-    @GetMapping("/photosession/{client}")
-    public String getPhotoSessionByClient(@PathVariable Client client, Model model) {
-        PhotoSessionDto photoSession = photoSessionService.getPhotoSessionByClient(client)
+    @GetMapping("/photosession/client/{clientId}")
+    public String getPhotoSessionByClient(@PathVariable long clientId, Model model) {
+        PhotoSessionDto photoSession = photoSessionService.getPhotoSessionByClientId(clientId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-      model.addAttribute("photoSession", photoSession);
+        model.addAttribute("photoSession", photoSession);
         return "photosession-client";
     }
 
-    @GetMapping("/photosession/{data}")
-    public String getPhotoSessionByData(@PathVariable LocalDateTime data, Model model) {
+    @GetMapping("/photosession/date")
+    public String getPhotoSessionByData(@RequestParam String date, Model model) {
+        LocalDateTime data;
+        try {
+            data = LocalDateTime.parse(date);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format", e);
+        }
         PhotoSessionDto photosession = photoSessionService.getPhotoSessionByDate(data)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         model.addAttribute("photoSession", photosession);

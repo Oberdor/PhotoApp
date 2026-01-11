@@ -12,17 +12,17 @@ import java.util.Optional;
 @Service
 public class PaymentService {
 
-    PaymentRepository paymentRepository;
-    PhotoSessionRepository photoSessionRepository;
+    private final PaymentRepository paymentRepository;
+    private final PhotoSessionRepository photoSessionRepository;
 
-
-    public PaymentService(PaymentRepository paymentRepository) {
+    public PaymentService(PaymentRepository paymentRepository, PhotoSessionRepository photoSessionRepository) {
         this.paymentRepository = paymentRepository;
+        this.photoSessionRepository = photoSessionRepository;
     }
 
-    public void updatePayment(long paymentId, Client client) {
+    public void updatePayment(long paymentId, long clientId) {
         Payment paymentToUpdate = paymentRepository.findPaymentById(paymentId).orElseThrow();
-        PhotoSession photoSession = photoSessionRepository.findPhotoSessionByClient(client).orElseThrow();
+        PhotoSession photoSession = photoSessionRepository.findPhotoSessionByClientId(clientId).orElseThrow();
         paymentToUpdate.setDeposit(photoSession.getPayment().getDeposit());
         paymentToUpdate.setBasePayment(photoSession.getPayment().getBasePayment());
         paymentToUpdate.setAdditionalPayment(photoSession.getPayment().getAdditionalPayment());

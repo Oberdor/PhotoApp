@@ -5,7 +5,6 @@ package org.ks.photoapp.domain.client;
 import org.ks.photoapp.domain.client.dto.ClientDto;
 import org.ks.photoapp.domain.photoSession.PhotoSessionService;
 import org.ks.photoapp.domain.photoSession.dto.PhotoSessionDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,8 +18,8 @@ import java.util.Optional;
 
 @Controller
 public class ClientController{
-    ClientService clientService;
-    PhotoSessionService photoSessionService;
+    private final ClientService clientService;
+    private final PhotoSessionService photoSessionService;
     public static final String NOTIFICATION_ATTRIBUTE = "notification";
 
     public ClientController(ClientService clientService, PhotoSessionService photoSessionService) {
@@ -83,7 +82,7 @@ public class ClientController{
         clientService.deleteClient(id);
         redirectAttributes.addFlashAttribute(NOTIFICATION_ATTRIBUTE,
                 "Usunięto klienta");
-        return "redirect:/all-clients";
+        return "redirect:/client/all";
     }
 
     @PostMapping("/client/update")
@@ -91,6 +90,6 @@ public class ClientController{
         clientService.updateClientDetails(client, id);
         redirectAttributes.addFlashAttribute(NOTIFICATION_ATTRIBUTE,
                 "Dane klienta zaktualinowane");
-        return "redirect:/client/{id}";
+        return "redirect:/client/" + id;
     }
 }

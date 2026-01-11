@@ -9,7 +9,6 @@ import org.ks.photoapp.domain.payment.Payment;
 import org.ks.photoapp.domain.payment.PaymentRepository;
 import org.ks.photoapp.domain.photoSession.dto.PhotoSessionDto;
 import org.ks.photoapp.domain.photos.Photos;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -21,7 +20,7 @@ import java.util.stream.Collectors;
 @Service
 public class PhotoSessionService {
     private final ClientRepository clientRepository;
-    PhotoSessionRepository photoSessionRepository;
+    private final PhotoSessionRepository photoSessionRepository;
 
 
     public PhotoSessionService(PhotoSessionRepository photoSessionRepository, ClientRepository clientRepository) {
@@ -32,9 +31,9 @@ public class PhotoSessionService {
     public List <PhotoSessionDto> getAll() {
         List<PhotoSession> photoSessions = (List<PhotoSession>) photoSessionRepository.findAll();
         return photoSessions.stream()
-                .filter(photoSession -> !photoSession.isContractFinished)
-                .map(PhotoSessionDtoMapper::map)
-                .toList();
+            .filter(photoSession -> Boolean.FALSE.equals(photoSession.getIsContractFinished()))
+            .map(PhotoSessionDtoMapper::map)
+            .toList();
     }
 
 
@@ -60,7 +59,7 @@ public class PhotoSessionService {
         photoSession.setPhotos(photos);
         photoSession.setSessionDate(photoSessionToSave.getSessionDate());
         photoSession.setSessionType(photoSessionToSave.getSessionType());
-        photoSession.isContractFinished = false;
+        photoSession.setIsContractFinished(false);
         photoSessionRepository.save(photoSession);
     }
 

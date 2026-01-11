@@ -17,20 +17,20 @@ import java.util.Date;
 public class PhotoSession {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
     @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.PERSIST})
     @JoinColumn(name = "client_id", referencedColumnName = "id")
-    Client client;
-    LocalDateTime sessionDate;
+    private Client client;
+    private LocalDateTime sessionDate;
     @Enumerated(EnumType.STRING)
-    SessionType sessionType;
+    private SessionType sessionType;
     @OneToOne(cascade = {CascadeType.REFRESH, CascadeType.PERSIST})
     @JoinColumn(name = "payment_id")
-    Payment payment;
+    private Payment payment;
     @OneToOne(cascade = {CascadeType.REFRESH, CascadeType.PERSIST})
     @JoinColumn(name = "photos_id")
-    Photos photos;
-    Boolean isContractFinished;
+    private Photos photos;
+    private Boolean isContractFinished;
 
     public PhotoSession() {
     }
