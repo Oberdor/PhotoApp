@@ -10,17 +10,17 @@ import java.time.LocalDateTime;
 
 @Data
 public class PhotoSessionDto {
-    Client client;
-    Long sessionPhotoId;
-    LocalDateTime sessionDate;
-    SessionType sessionType;
-    Boolean isDepositPaid;
-    Boolean isBasePaid;
-    Boolean isPhotosSentToClientForChoose;
-    Boolean isPhotosChosenByClient;
-    Boolean isAdditionalPhotosChosenByClient;
-    Boolean isAdditionalPaid;
-    Boolean isContractFinished;
+    private Client client;
+    private Long sessionPhotoId;
+    private LocalDateTime sessionDate;
+    private SessionType sessionType;
+    private Boolean isDepositPaid;
+    private Boolean isBasePaid;
+    private Boolean isPhotosSentToClientForChoose;
+    private Boolean isPhotosChosenByClient;
+    private Boolean isAdditionalPhotosChosenByClient;
+    private Boolean isAdditionalPaid;
+    private Boolean isContractFinished;
 
     public PhotoSessionDto() {
     }

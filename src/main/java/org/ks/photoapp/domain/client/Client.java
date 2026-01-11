@@ -11,13 +11,13 @@ import java.util.List;
 public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    String firstName;
-    String lastName;
-    String email;
-    Long phoneNumber;
+    private Long id;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private Long phoneNumber;
     @OneToMany(mappedBy = "client", cascade = {CascadeType.REFRESH, CascadeType.PERSIST})
-    List<PhotoSession> photoSessions = new ArrayList<>();
+    private List<PhotoSession> photoSessions = new ArrayList<>();
 
     public Long getId() {
         return id;

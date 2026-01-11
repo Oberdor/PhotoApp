@@ -9,15 +9,15 @@ import org.ks.photoapp.domain.photoSession.PhotoSession;
 public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    Float deposit;
-    Float basePayment;
-    Float additionalPayment;
-    Boolean isDepositPaid;
-    Boolean isBasePaid;
-    Boolean isAdditionalPaid;
+    private Long id;
+    private Float deposit;
+    private Float basePayment;
+    private Float additionalPayment;
+    private Boolean isDepositPaid;
+    private Boolean isBasePaid;
+    private Boolean isAdditionalPaid;
     @OneToOne(mappedBy = "payment", cascade = {CascadeType.REFRESH, CascadeType.PERSIST})
-    PhotoSession photoSession;
+    private PhotoSession photoSession;
 
 
 

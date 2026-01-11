@@ -1,12 +1,12 @@
 package org.ks.photoapp.domain.payment.dto;
 
 public class PaymentDto {
-    Float deposit;
-    Float basePayment;
-    Float additionalPayment;
-    Boolean isDepositPaid;
-    Boolean isBasePaid;
-    Boolean isAdditionalPaid;
+    private Float deposit;
+    private Float basePayment;
+    private Float additionalPayment;
+    private Boolean isDepositPaid;
+    private Boolean isBasePaid;
+    private Boolean isAdditionalPaid;
 
     public PaymentDto(Float deposit, Float basePayment, Float additionalPayment, Boolean isDepositPaid,
                       Boolean isBasePaid, Boolean isAdditionalPaid) {

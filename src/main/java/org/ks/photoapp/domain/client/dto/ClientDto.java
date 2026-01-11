@@ -10,11 +10,11 @@ import java.util.List;
 
 @Data
 public class ClientDto {
-    Long id;
-    String firstName;
-    String lastName;
-    String email;
-    Long phoneNumber;
+    private Long id;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private Long phoneNumber;
     private List<PhotoSessionDto> photoSessions;
 
 
