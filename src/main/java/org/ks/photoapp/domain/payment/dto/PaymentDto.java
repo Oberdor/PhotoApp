@@ -1,5 +1,8 @@
 package org.ks.photoapp.domain.payment.dto;
 
+import lombok.Data;
+
+@Data
 public class PaymentDto {
     Float deposit;
     Float basePayment;
