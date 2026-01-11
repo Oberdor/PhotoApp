@@ -2,7 +2,7 @@ package org.ks.photoapp.domain.client;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.ks.photoapp.domain.photoSession.PhotoSession;
+import org.ks.photoapp.domain.photosession.PhotoSession;
 
 import java.util.ArrayList;
 import java.util.List;

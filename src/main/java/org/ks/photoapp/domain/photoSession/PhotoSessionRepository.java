@@ -1,4 +1,4 @@
-package org.ks.photoapp.domain.photoSession;
+package org.ks.photoapp.domain.photosession;
 
 import org.ks.photoapp.domain.client.Client;
 import org.springframework.data.repository.CrudRepository;

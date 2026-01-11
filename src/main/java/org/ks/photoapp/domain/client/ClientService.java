@@ -2,10 +2,11 @@ package org.ks.photoapp.domain.client;
 
 
 import org.ks.photoapp.domain.client.dto.ClientDto;
-import org.ks.photoapp.domain.photoSession.PhotoSession;
-import org.ks.photoapp.domain.photoSession.PhotoSessionRepository;
+import org.ks.photoapp.domain.photosession.PhotoSession;
+import org.ks.photoapp.domain.photosession.PhotoSessionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.ks.photoapp.domain.client.exception.ClientNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,24 +29,24 @@ public class ClientService {
                 .filter(session -> !session.getIsContractFinished())
                 .map(PhotoSession::getClient)
                 .distinct()
-                .map(ClientDtoMapper::map)
+                .map(org.ks.photoapp.domain.client.mapper.ClientDtoMapper::map)
                 .toList();
     }
     public List<ClientDto> getAllClients() {
        List<Client> clients = (List<Client>)clientRepository.findAll();
-       return clients.stream()
-               .map(ClientDtoMapper::map)
-               .toList();
+               return clients.stream()
+                   .map(org.ks.photoapp.domain.client.mapper.ClientDtoMapper::map)
+                   .toList();
     }
 
     public Optional<ClientDto> findClientById(long id){
         return clientRepository.findById(id)
-                .map(ClientDtoMapper::map);
+            .map(org.ks.photoapp.domain.client.mapper.ClientDtoMapper::map);
     }
 
     public Optional<ClientDto> findClientByLastName(String lastName){
         return clientRepository.findByLastName(lastName)
-                .map(ClientDtoMapper::map);
+            .map(org.ks.photoapp.domain.client.mapper.ClientDtoMapper::map);
     }
 
     @Transactional
@@ -60,7 +61,7 @@ public class ClientService {
 
     public void updateClientDetails(ClientDto clientDto, long id) {
     Client clientToUpdate = clientRepository.findById(id)
-            .orElseGet(Client::new);
+            .orElseThrow(() -> new ClientNotFoundException(id));
     clientToUpdate.setLastName(clientDto.getLastName());
     clientToUpdate.setFirstName(clientDto.getFirstName());
     clientToUpdate.setEmail(clientDto.getEmail());
@@ -70,6 +71,9 @@ public class ClientService {
 
 
     public void deleteClient(Long id){
+        if (!clientRepository.existsById(id)) {
+            throw new ClientNotFoundException(id);
+        }
         clientRepository.deleteClientById(id);
     }
 }

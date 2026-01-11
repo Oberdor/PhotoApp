@@ -1,13 +1,17 @@
-package org.ks.photoapp.domain.payment;
+package org.ks.photoapp.web.payment;
 
 import org.ks.photoapp.domain.client.Client;
+import org.ks.photoapp.domain.payment.PaymentService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
-// Moved to `org.ks.photoapp.web.payment.PaymentController`
-// @Controller
+@Controller
 public class PaymentController {
     PaymentService paymentService;
+
+    public PaymentController(PaymentService paymentService) {
+        this.paymentService = paymentService;
+    }
 
     @GetMapping("/update-paid")
     public String updatePaid(long paymentId, Client client) {
@@ -16,4 +20,3 @@ public class PaymentController {
     }
 
 }
-

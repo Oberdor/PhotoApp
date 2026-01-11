@@ -3,8 +3,8 @@ package org.ks.photoapp.domain.client.dto;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import org.ks.photoapp.domain.photoSession.PhotoSession;
-import org.ks.photoapp.domain.photoSession.dto.PhotoSessionDto;
+import org.ks.photoapp.domain.photosession.PhotoSession;
+import org.ks.photoapp.domain.photosession.dto.PhotoSessionDto;
 
 import java.util.List;
 

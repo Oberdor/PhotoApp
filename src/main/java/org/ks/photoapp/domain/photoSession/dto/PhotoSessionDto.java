@@ -1,4 +1,4 @@
-package org.ks.photoapp.domain.photoSession.dto;
+package org.ks.photoapp.domain.photosession.dto;
 
 import lombok.Data;
 import org.ks.photoapp.domain.client.Client;

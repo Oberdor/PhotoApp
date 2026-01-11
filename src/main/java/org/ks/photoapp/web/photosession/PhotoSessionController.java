@@ -1,18 +1,17 @@
-package org.ks.photoapp.domain.photosession;
+package org.ks.photoapp.web.photosession;
 
 import org.ks.photoapp.domain.client.Client;
-import org.ks.photoapp.domain.client.mapper.ClientDtoMapper;
-import org.ks.photoapp.domain.client.ClientService;
 import org.ks.photoapp.domain.client.dto.ClientDto;
-import org.ks.photoapp.domain.payment.Payment;
+import org.ks.photoapp.domain.client.ClientService;
 import org.ks.photoapp.domain.payment.PaymentService;
+import org.ks.photoapp.domain.photosession.PhotoSession;
+import org.ks.photoapp.domain.photosession.PhotoSessionService;
 import org.ks.photoapp.domain.photosession.dto.PhotoSessionDto;
 import org.ks.photoapp.domain.sessionType.SessionType;
-import org.ks.photoapp.domain.photosession.exception.PhotoSessionNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-// ResponseStatusException removed in favor of domain-specific exceptions
+import org.ks.photoapp.domain.photosession.exception.PhotoSessionNotFoundException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
@@ -20,11 +19,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.ks.photoapp.domain.client.ClientController.NOTIFICATION_ATTRIBUTE;
+import static org.ks.photoapp.web.client.ClientController.NOTIFICATION_ATTRIBUTE;
 
 
-// Moved to `org.ks.photoapp.web.photosession.PhotoSessionController`
-// @Controller
+@Controller
 public class PhotoSessionController {
 
     private final ClientService clientService;
@@ -69,7 +67,6 @@ public class PhotoSessionController {
 
         return "update-photosession";
     }
-
 
 
     @PostMapping("/update-photosession/{id}")
@@ -122,5 +119,3 @@ public class PhotoSessionController {
 
 
 }
-
-

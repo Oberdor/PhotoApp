@@ -1,4 +1,4 @@
-package org.ks.photoapp.domain.photoSession;
+package org.ks.photoapp.domain.photosession;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -33,6 +33,22 @@ public class PhotoSession {
     Boolean isContractFinished;
 
     public PhotoSession() {
+    }
+
+    public void applyUpdateFrom(org.ks.photoapp.domain.photosession.dto.PhotoSessionDto dto, org.ks.photoapp.domain.client.Client client) {
+        if (client != null) {
+            this.setClient(client);
+        }
+        this.setSessionDate(dto.getSessionDate());
+        this.setSessionType(dto.getSessionType());
+
+        if (this.getPayment() != null) {
+            this.getPayment().applyFromDto(dto.getIsDepositPaid(), dto.getIsBasePaid(), dto.getIsAdditionalPaid());
+        }
+
+        if (this.getPhotos() != null) {
+            this.getPhotos().applyFromDto(dto.getIsPhotosSentToClientForChoose(), dto.getIsPhotosChosenByClient(), dto.getIsAdditionalPhotosChosenByClient());
+        }
     }
 
 }
